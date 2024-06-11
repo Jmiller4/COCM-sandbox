@@ -109,11 +109,13 @@ def COCM(donation_df, cluster_df, calcstyle='markov', harsh=True):
 
 st.write("## COCM Sandbox")
 
-st.write("### Inputs")
+st.write("### Parameters")
 
 max_donors = 10
 max_projects = 10
 max_donation = 50
+
+names = ['Alice','Bob','Cassie','Denice','Etna','Frankie','Gertie','Hal','Irena','June']
 
 if 'don' not in st.session_state:
 
@@ -136,6 +138,7 @@ for d in range(max_donors):
 		if d not in donors or p not in projects:
 			st.session_state.def_don[d][p] = 0
 
+st.write("### Donation Amounts")
 
 if st.button('Randomize Donations'):
 
@@ -151,7 +154,7 @@ proj_cols = st.columns(num_projects)
 for p in projects:
 	for d in donors:
 		#st.session_state['don'][d][p] = 
-		st.session_state.don[d][p] = proj_cols[p].slider(f'donor {d + 1} -> project {p + 1}', min_value = 0, max_value = max_donation, value = st.session_state.def_don[d][p])
+		st.session_state.don[d][p] = proj_cols[p].slider(f'{names[d]} ➡️ Project {p + 1}', min_value = 0, max_value = max_donation, value = st.session_state.def_don[d][p])
 
 
 st.session_state.donation_df = pd.DataFrame(index = donors, columns = projects, data = [[st.session_state.don[d][p] for p in projects] for d in donors])
