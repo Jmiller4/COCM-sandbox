@@ -166,6 +166,8 @@ st.set_page_config(
     layout="wide",
 )
 
+st.image('657c7ed16b14af693c08b92d_GTC-Logotype-Dark.png', width = 300)
+
 st.write("# COCM Sandbox")
 
 st.write('COCM (Connection-Oriented Cluster Match) is a mechanism for allocating money to different projects. Users donate money directly to the projects, and then the mechanism adds in extra money to award projects that have diverse bases of support.')
