@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 import numpy as np
+from itertools import combinations
 
 
 def binarize(df):
@@ -107,15 +108,83 @@ def COCM(donation_df, cluster_df, calcstyle='markov', harsh=True):
 
   return funding
 
-st.write("## COCM Sandbox")
+def randomize_donations():
 
-st.write("### Parameters")
+	for d in range(max_donors):
+		for p in range(max_projects):
+			st.session_state.def_don[d][p] = 0
+			if d in donors and p in projects:
+				if random.random() > 0.333:
+					st.session_state.def_don[d][p] = random.choice(list(range(1,max_donation+1)))
 
-max_donors = 10
-max_projects = 10
-max_donation = 50
+	# now pick two random donors, and make sure they produce matching
+	pair = random.choice(list(combinations(donors, 2)))
+
+
+	# do they have a project in common? if not, randomly select one
+
+	common_proj = ''
+	for p in projects:
+		if st.session_state.def_don[pair[0]][p] > 0 and st.session_state.def_don[pair[1]][p] > 0:
+			common_proj = p
+			continue
+	if common_proj == '':
+		common_proj = random.choice(projects)
+		st.session_state.def_don[pair[0]][common_proj] = random.choice(list(range(1,max_donation+1)))
+		st.session_state.def_don[pair[1]][common_proj] = random.choice(list(range(1,max_donation+1)))
+
+
+	# is there a project that just pair[0] donates to? if not, randomly select one
+
+	just0_proj = ''
+	for p in projects:
+		if st.session_state.def_don[pair[0]][p] > 0 and st.session_state.def_don[pair[1]][p] == 0:
+			just0_proj = p
+			continue
+	if just0_proj == '':
+		just0_proj = random.choice(list(set(projects) - set([common_proj])))
+		st.session_state.def_don[pair[0]][just0_proj] = random.choice(list(range(1,max_donation+1)))
+		st.session_state.def_don[pair[1]][just0_proj] = 0
+
+
+	# is there a project that just pair_1 donates to? if not, randomly select one
+
+	just1_proj = ''
+	for p in projects:
+		if st.session_state.def_don[pair[0]][p] == 0 and st.session_state.def_don[pair[1]][p] > 0:
+			just1_proj = p
+			continue
+	if just1_proj == '':
+		just1_proj = random.choice(list(set(projects) - set([common_proj, just0_proj])))
+		st.session_state.def_don[pair[0]][just1_proj] = 0
+		st.session_state.def_don[pair[1]][just1_proj] = random.choice(list(range(1,max_donation+1)))
+
+
+
+st.set_page_config(
+    page_title="COCM Sandbox",
+    layout="wide",
+)
+
+st.write("# COCM Sandbox")
+
+st.write('COCM (Connection-Oriented Cluster Match) is a mechanism for allocating money to different projects. Users donate money directly to the projects, and the mechanism adds in extra money to award projects that have diverse bases of support.')
+
+st.write('COCM builds off of another mechanism called Quadratic Funding (QF). QF is great, but it\'s not so good at dealing with fake accounts. COCM fixes the problems with QF by refining where and when projects get extra money.')
+
+st.write('On this page, you can play around with COCM yourself! Use the sliders to adjust donation amounts. Final funding amounts are displayed at the bottom.')
+
+st.write('For a project to get extra funding (above what folks directly donate), the donor group needs to be diverse: there needs to be at least two other projects (let\'s call them X and Y) where some people also donate to X and not Y, and other people do the opposite.')
+
+st.write("### Donors and Projects")
+
+
+
 
 names = ['Alice','Bob','Cassie','Denice','Etna','Frankie','Gertie','Hal','Irena','June']
+max_donors = len(names)
+max_projects = 10
+max_donation = 50
 
 if 'don' not in st.session_state:
 
@@ -126,12 +195,15 @@ if 'def_don' not in st.session_state:
 	st.session_state.def_don = {d: {p:0 for p in range(max_projects)} for d in range(max_donors) }
 
 col1, col2 = st.columns(2)
-num_donors = col1.number_input("Number of Donors", min_value=1, max_value=max_donors, value=5, step = 1)
-num_projects = col2.number_input("Number of Projects", min_value=1, max_value=max_projects, value=3, step = 1)
+num_donors = col1.number_input("Number of Donors", min_value=3, max_value=max_donors, value=5, step = 1)
+num_projects = col2.number_input("Number of Projects", min_value=3, max_value=max_projects, value=3, step = 1)
 
 donors = range(num_donors)
 projects = range(num_projects)
 
+if 'startup' not in st.session_state:
+	randomize_donations()
+	st.session_state.startup = 'done'
 
 for d in range(max_donors):
 	for p in range(max_projects):
@@ -140,14 +212,15 @@ for d in range(max_donors):
 
 st.write("### Donation Amounts")
 
-if st.button('Randomize Donations'):
+button_cols = st.columns(2)
 
+if button_cols[0].button('Randomize Donations'):
+	randomize_donations()
+
+if button_cols[1].button('Clear Donations'):
 	for d in range(max_donors):
 		for p in range(max_projects):
 			st.session_state.def_don[d][p] = 0
-			if d in donors and p in projects:
-				if random.random() > 0.333:
-					st.session_state.def_don[d][p] = random.choice(list(range(1,max_donation+1)))
 
 proj_cols = st.columns(num_projects)
 
