@@ -211,7 +211,7 @@ max_donation = 50
 
 
 col1, col2, col3 = st.columns(3)
-num_donors = col1.number_input("Number of Donors", min_value=3, max_value=max_donors, value=5, step = 1)
+num_donors = col1.number_input("Number of Donors", min_value=3, max_value=max_donors, value=4, step = 1)
 num_projects = col2.number_input("Number of Projects", min_value=3, max_value=max_projects, value=3, step = 1)
 matching_pool_size = col3.slider('Size of Matching Pool', min_value=100, max_value=2000, step=100)
 
