@@ -180,15 +180,10 @@ def clear_donations():
 			st.session_state.def_don[d][p] = 0
 			st.session_state.don[d][p] = 0
 
-st.set_page_config(
-		page_title="COCM Sandbox",
-		layout="wide",
-)
-
 
 st.set_page_config(
-    page_title="COCM Sandbox",
-    layout="wide",
+	page_title="COCM Sandbox",
+	layout="wide",
 )
 
 st.image('657c7ed16b14af693c08b92d_GTC-Logotype-Dark.png', width = 300)
