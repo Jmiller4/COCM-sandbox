@@ -195,7 +195,7 @@ st.write('COCM (Connection-Oriented Cluster Match) is a mechanism for allocating
 
 st.write('COCM builds off of another mechanism called Quadratic Funding (QF). QF is great, but it\'s not so good at dealing with fake accounts or well-coordinated groups of people, which can sometimes make it feel like a popularity contest. COCM fixes the problems with QF by refining where and when projects get extra money.')
 
-st.write('On this page, you can play around with COCM yourself! Use the sliders to adjust donation amounts. Final funding amounts are displayed at the bottom.')
+st.write('On this page, you can play around with COCM yourself! Use the sliders to adjust donation amounts, or just randomize them with the "Shuffle Donations" button. Final funding amounts are displayed at the bottom.')
 
 st.write('For a project to get extra funding (above what folks directly donate), the donor group needs to be diverse: there needs to be at least two other projects (let\'s call them X and Y) where some people also donate to X and not Y, and other people do the opposite.')
 
