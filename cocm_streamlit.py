@@ -241,13 +241,14 @@ if 'iter' not in st.session_state:
 
 
 
-bc1, bc2 = st.columns(2)
+bc1, bc2, bcEmpty = st.columns(3)
 if bc1.button('Shuffle Donations'):
 	randomize_donations(num_donors, num_projects)
 	st.session_state.iter += 1
 if bc2.button('Clear Donations'):
 	clear_donations()
 	st.session_state.iter += 1
+bcEmpty = st.empty()
 
 
 
